@@ -25,6 +25,12 @@ namespace DatingApp.Controllers
             var value = _context.Value.ToList();
             return Ok(value);
         }
+        [HttpGet("{id}")]
+        public ActionResult Get(int id)
+        {
+            var value = _context.Value.FirstOrDefault(x=> x.Id == id);
+            return Ok(value);
+        }
 
     }
 }

@@ -2,4 +2,4 @@
 
 
 Database used : sqllite
-EFcore 3.1
+ef version: EFcore 3.1

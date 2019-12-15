@@ -1,4 +1,5 @@
 ﻿using DatingApp.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,37 @@ namespace DatingApp.Data
         {
             this._Context = dataContext;
         }
-        public Task<User> Login(string username, string password)
+        public async Task<User> Login(string username, string password)
         {
-            throw new NotImplementedException();
+            var user = await _Context.Users.FirstOrDefaultAsync(x => x.Username == username);
+            if (user == null)
+                return null;
+
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+                return null;
+
+            return user;
+        }
+
+
+        /// <summary>
+        /// used to verify pass hash 
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="passwordHash"></param>
+        /// <param name="passwordSalt"></param>
+        /// <returns></returns>
+        private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                for(int i=0; i<computedHash.Length; i++)
+                {
+                    if (computedHash[i] != passwordHash[i]) return false;
+                }
+            };
+            return true;
         }
 
         public async Task<User> Register(User user, string Password)
@@ -53,9 +82,12 @@ namespace DatingApp.Data
             };
         }
 
-        public Task<bool> UserExists(string username)
+        public async Task<bool> UserExists(string username)
         {
-            throw new NotImplementedException();
+            if (await _Context.Users.AnyAsync(x => x.Username == username))
+                return true;
+
+            return false;
         }
     }
 }

@@ -59,11 +59,9 @@ namespace DatingApp
             }
 
             app.UseRouting();
-
-            app.UseAuthorization();
-
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // for cors
             app.UseAuthentication(); // authenticaltion support
+            app.UseAuthorization(); // use this sequence to properly work authorization..
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

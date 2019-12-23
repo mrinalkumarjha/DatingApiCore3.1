@@ -70,14 +70,14 @@ namespace DatingApp
                     builder.Run(async context =>
                     {
                         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
+                        //context.Response.ContentType = "text/html";
                         var error = context.Features.Get<IExceptionHandlerFeature>();
                         if(error !=null)
                         {
                             // added extension method to add cors header as cors error in api is misleading.
                             context.Response.AddApplicationError(error.Error.Message);
                             // writing error to http response 
-                            await context.Response.WriteAsync(error.Error.Message);
+                            await context.Response.WriteAsync(error.Error.Message).ConfigureAwait(false);
                         }
                     });
                 });

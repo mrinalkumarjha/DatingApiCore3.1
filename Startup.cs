@@ -41,6 +41,7 @@ namespace DatingApp
             services.AddTransient<Seed>();
 
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
             // adding authen middleware
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

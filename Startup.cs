@@ -84,7 +84,7 @@ namespace DatingApp
                     });
                 });
             }
-            //seeder.SeedUsers();
+            seeder.SeedUsers();
             app.UseRouting();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // for cors
             app.UseAuthentication(); // authenticaltion support

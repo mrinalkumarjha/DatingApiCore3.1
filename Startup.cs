@@ -38,6 +38,7 @@ namespace DatingApp
             services.AddControllers();
 
             services.AddCors();// for enabling cors to client 
+            services.AddTransient<Seed>();
 
             services.AddScoped<IAuthRepository, AuthRepository>();
             // adding authen middleware
@@ -55,7 +56,7 @@ namespace DatingApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, Seed seeder)
         {
             if (env.IsDevelopment())
             {
@@ -82,7 +83,7 @@ namespace DatingApp
                     });
                 });
             }
-
+            //seeder.SeedUsers();
             app.UseRouting();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // for cors
             app.UseAuthentication(); // authenticaltion support

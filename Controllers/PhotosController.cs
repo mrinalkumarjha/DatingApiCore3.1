@@ -91,7 +91,7 @@ namespace DatingApp.Controllers
             {
                 var photoToReturn = _mapper.Map<PhotoForReturnDto>(photo);
                 // TODO : System.InvalidOperationException: No route matches the supplied values
-                return CreatedAtRoute(nameof(GetPhoto), new {id= photo.Id }, photoToReturn);
+                return CreatedAtRoute(nameof(GetPhoto), new { userId, id = photo.Id }, photoToReturn);
             }
 
             return BadRequest("Could not add the photo");

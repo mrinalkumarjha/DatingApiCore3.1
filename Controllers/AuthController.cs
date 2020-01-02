@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using DatingApp.Data;
 using DatingApp.Dtos;
 using DatingApp.Models;
@@ -24,14 +25,16 @@ namespace DatingApp.Controllers
     {
         private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _confiuration;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// injecting dependency in constructor
         /// </summary>
-        public AuthController(IAuthRepository authRepository, IConfiguration confiuration)
+        public AuthController(IAuthRepository authRepository, IConfiguration confiuration, IMapper mapper)
         {
-            this._authRepository = authRepository;
-            this._confiuration = confiuration;
+            _authRepository = authRepository;
+            _confiuration = confiuration;
+            _mapper = mapper;
         }
 
         [HttpPost("register")]
@@ -82,9 +85,13 @@ namespace DatingApp.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor); // this is our jwt token
 
+            var user = _mapper.Map<UserForListDto>(userFromRepo); // for displaying user image in navbar
+
+            // returning user in anonmus method
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user
             }); 
         }
 

@@ -125,6 +125,50 @@ namespace DatingApp.Controllers
             return BadRequest("Could not set photo to main");
         }
 
+        /// <summary>
+        /// Delete method to delete by photoid
+        /// </summary>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePhoto(int userId, int id)
+        {
+            // this line validate if user is saving his data
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            // check for user attempt to updating own photo
+            var user = await _repository.GetUser(userId);
+
+            if (!user.Photos.Any(p => p.Id == id))
+                return Unauthorized();
+
+            var photoFromRepo = await _repository.GetPhoto(id);
+            if (photoFromRepo.IsMain)
+                return BadRequest("You cannot delete your main photo");
+
+            if(photoFromRepo.PublicID != null)
+            {
+                var deletionParams = new DeletionParams(photoFromRepo.PublicID);
+                var result = _cloudinary.Destroy(deletionParams);
+
+                if (result.Result == "ok")
+                {
+                    _repository.Delete(photoFromRepo);
+                }
+            }
+            if(photoFromRepo.PublicID == null)
+            {
+                _repository.Delete(photoFromRepo);
+            }
+
+
+            if (await _repository.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to delete the photo");
+
+        }
+
+
 
     }
 }

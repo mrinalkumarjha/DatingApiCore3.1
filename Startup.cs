@@ -36,10 +36,14 @@ namespace DatingApp
         {
             services.AddDbContext<DataContext>(x =>
             x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddControllers();
+            
+            services.AddControllers().AddJsonOptions(options => {
+                options.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+            });
 
             services.AddCors();// for enabling cors to client
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings")); // configuring CloudinarySettings class. so value from app setting with match in class
+
 
             // Auto Mapper Configurations
             var mappingConfig = new MapperConfiguration(mc =>

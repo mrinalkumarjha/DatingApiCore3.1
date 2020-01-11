@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,16 @@ namespace DatingApp.Helpers
             response.Headers.Add("Access-Control-Allow-Orgin", "*");
         }
 
+        /// <summary>
+        /// Extension method to add pagination property to header
+        /// </summary>
+        public static void AddPagination(this HttpResponse response, int currentPage,
+            int itemsPerPage, int totalItems, int totalPages)
+        {
+            var paginationHeader = new PaginationHeader(currentPage, itemsPerPage, totalItems, totalPages);
+            response.Headers.Add("Pagination", JsonConvert.SerializeObject(paginationHeader));
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination"); // for cors error we expose this
+        }
         public static int CalculateAge(this DateTime dateTime)
         {
             var age = DateTime.Today.Year - dateTime.Year;

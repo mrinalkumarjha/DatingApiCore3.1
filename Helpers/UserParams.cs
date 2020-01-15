@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace DatingApp.Helpers
 {
+    /// <summary>
+    /// Class for filtering
+    /// </summary>
     public class UserParams
     {
 		private const int MaxPageSize = 50;
@@ -20,6 +23,8 @@ namespace DatingApp.Helpers
 		public int UserId{ get; set; }
 		public string Gender { get; set; }
 
+        public int MinAge { get; set; } = 18;
+        public int MaxAge { get; set; } = 99;
 
-	}
+    }
 }

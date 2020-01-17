@@ -111,6 +111,17 @@ namespace DatingApp
             {
                 endpoints.MapControllers();
             });
+            app.UseDefaultFiles(); // it will look for default files like index.html, default.html etc
+            app.UseStaticFiles(); // enables ststic file serving 
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+             
+                endpoints.MapFallbackToController("Index", "Fallback"); // for spa route
+            });
         }
     }
 }
